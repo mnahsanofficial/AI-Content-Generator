@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: content-generator-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: content-generator
+    networks:
+      - content-generator-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: content-generator-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - content-generator-network
+    command: redis-server --appendonly yes
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  content-generator-network:
+    driver: bridge
+
