@@ -386,7 +386,3 @@ Start MongoDB and Redis with Docker:
 docker-compose up -d
 ```
 
-## 📝 License
-
-MIT
-
