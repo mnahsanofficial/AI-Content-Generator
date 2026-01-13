@@ -190,8 +190,8 @@ This is the easiest way to set up MongoDB and Redis locally.
 #### Step 1: Clone the Repository
 
 ```bash
-git clone <your-repository-url>
-cd opti-assignment
+git clone https://github.com/mnahsanofficial/AI-Content-Generator.git
+cd AI-Content-Generator
 ```
 
 #### Step 2: Start MongoDB and Redis with Docker
@@ -372,7 +372,7 @@ Then follow Steps 3-7 from Option 1 above.
 
 ```
 Development: http://localhost:5001/api
-Production: https://your-backend-url.com/api
+Production: Not Deployed
 ```
 
 ### Authentication
@@ -1243,12 +1243,6 @@ This is a project submission. For questions or feedback, please contact:
 - LinkedIn: [linkedin.com/in/mn-ahsan](https://www.linkedin.com/in/mn-ahsan)
 - GitHub: [github.com/mnahsanofficial](https://github.com/mnahsanofficial)
 - Email: mnahsanofficial@gmail.com
-
----
-
-## 📄 License
-
-MIT License
 
 ---
 
