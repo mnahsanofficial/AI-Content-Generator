@@ -16,7 +16,9 @@ describe('Authentication API', () => {
   });
 
   afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
+    if (mongoose.connection.db) {
+      await mongoose.connection.db.dropDatabase();
+    }
     await disconnectDatabase();
   });
 

@@ -32,7 +32,9 @@ describe('Content API', () => {
   });
 
   afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
+    if (mongoose.connection.db) {
+      await mongoose.connection.db.dropDatabase();
+    }
     await disconnectDatabase();
   });
 
@@ -56,14 +58,22 @@ describe('Content API', () => {
     });
   });
 
-  describe('POST /api/content (via generate endpoint)', () => {
+  describe('PUT /api/content/:id', () => {
     it('should require authentication', async () => {
       const response = await request(app)
-        .post('/api/generate-content')
+        .put('/api/content/507f1f77bcf86cd799439011')
         .send({
-          prompt: 'Test prompt',
-          contentType: 'blog',
+          title: 'Updated Title',
         });
+
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('DELETE /api/content/:id', () => {
+    it('should require authentication', async () => {
+      const response = await request(app)
+        .delete('/api/content/507f1f77bcf86cd799439011');
 
       expect(response.status).toBe(401);
     });
