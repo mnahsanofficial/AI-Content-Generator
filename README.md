@@ -1,6 +1,6 @@
 # AI-Powered Content Generator & Management System
 
-A production-grade full-stack application for generating and managing AI-powered content using the MERN stack with Redis queue processing. This system enables users to generate blog posts, product descriptions, and social media captions using OpenAI's GPT models, with automatic sentiment analysis and real-time updates.
+A production-grade full-stack application for generating and managing AI-powered content using the MERN stack with Redis queue processing. This system enables users to generate blog posts, product descriptions, and social media captions using OpenAI's GPT-4o-mini model, with automatic sentiment analysis, real-time updates, professional countdown timers, and ChatGPT-style markdown formatting.
 
 ![Tech Stack](https://img.shields.io/badge/Stack-MERN-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)
@@ -111,6 +111,8 @@ This application is a comprehensive content generation platform that leverages A
 - ✅ **Toast Notifications** - Professional error handling
 - ✅ **Password Visibility Toggle** - Enhanced UX for password fields
 - ✅ **Status Tracking** - Real-time job status updates (queued, processing, completed, failed)
+- ✅ **Countdown Timer** - Professional 60-second countdown timer with visual progress indicator
+- ✅ **Markdown Formatting** - ChatGPT-style text rendering with support for headings (#, ##, ###, ####), bold (**text**), and italic (*text*)
 - ✅ **Comprehensive Testing** - Unit and integration tests for critical endpoints
 
 ---
@@ -161,12 +163,13 @@ This application is a comprehensive content generation platform that leverages A
 1. **User Request** → Frontend sends generation request to backend
 2. **Job Enqueue** → Backend creates job in BullMQ queue with 60s delay
 3. **Immediate Response** → Backend returns HTTP 202 with job ID
-4. **Worker Processing** → Separate worker process handles job after delay
-5. **AI Generation** → Worker calls OpenAI API to generate content
-6. **Sentiment Analysis** → Generated content is analyzed for sentiment
-7. **Data Storage** → Content saved to MongoDB with status "completed"
-8. **Real-time Notification** → Socket.IO emits event to frontend
-9. **Content Display** → Frontend receives update and displays content
+4. **Countdown Timer** → Frontend displays professional 60-second countdown timer with visual progress
+5. **Worker Processing** → Separate worker process handles job after delay
+6. **AI Generation** → Worker calls OpenAI API (GPT-4o-mini) to generate content
+7. **Sentiment Analysis** → Generated content is analyzed for sentiment
+8. **Data Storage** → Content saved to MongoDB with status "completed"
+9. **Real-time Notification** → Socket.IO emits event to frontend
+10. **Content Display** → Frontend receives update, formats markdown (headings, bold, italic), and displays content
 
 ---
 
@@ -1150,6 +1153,7 @@ opti-assignment/
 │   │   ├── Toast.tsx                # Toast notifications
 │   │   ├── ConfirmModal.tsx         # Delete confirmation
 │   │   ├── TypingLoader.tsx         # Loading animation
+│   │   ├── CountdownTimer.tsx       # 60-second countdown timer
 │   │   └── Footer.tsx               # Footer component
 │   ├── hooks/
 │   │   └── useSocket.ts             # Socket.IO hook
@@ -1157,6 +1161,8 @@ opti-assignment/
 │   │   ├── api.ts                   # API client
 │   │   ├── store.ts                 # Zustand store
 │   │   └── socket.ts                # Socket.IO client
+│   ├── utils/
+│   │   └── markdownFormatter.tsx   # Markdown text formatter
 │   ├── package.json
 │   ├── next.config.js
 │   ├── tailwind.config.ts
