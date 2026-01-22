@@ -970,8 +970,9 @@ This section explains the key architectural choices made during development and 
 - **Continuous Updates**: Access to latest model improvements
 
 **Model Selection:**
-- Using `gpt-3.5-turbo` for cost-effectiveness
-- Can easily upgrade to `gpt-4` for better quality if needed
+- Using `gpt-4o-mini` for optimal balance of quality, speed, and cost-effectiveness
+- Provides better quality than GPT-3.5 Turbo at lower cost
+- Faster response times compared to GPT-4 while maintaining high quality
 
 **Alternative Considered:** Self-hosted models (LLaMA, etc.) were rejected due to infrastructure complexity and lower quality.
 

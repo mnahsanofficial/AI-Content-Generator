@@ -25,7 +25,7 @@ export class AIService {
       const systemPrompt = this.getSystemPrompt(contentType);
       
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -74,7 +74,7 @@ export class AIService {
     try {
       const openai = getOpenAIClient();
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
