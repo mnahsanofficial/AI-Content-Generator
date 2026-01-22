@@ -8,6 +8,8 @@ import { useAuthStore } from '@/lib/store';
 import { generateAPI } from '@/lib/api';
 import { useSocket } from '@/hooks/useSocket';
 import TypingLoader from '@/components/TypingLoader';
+import CountdownTimer from '@/components/CountdownTimer';
+import { formatMarkdownText } from '@/utils/markdownFormatter';
 
 type ContentType = 'blog' | 'product' | 'caption';
 
@@ -20,6 +22,7 @@ export default function GeneratePage() {
   const [status, setStatus] = useState<'queued' | 'processing' | 'completed' | 'failed' | null>(null);
   const [generatedContent, setGeneratedContent] = useState<any>(null);
   const [polling, setPolling] = useState(false);
+  const [countdownStart, setCountdownStart] = useState<number | null>(null);
   const router = useRouter();
   const { subscribeToContent } = useSocket();
 
@@ -32,6 +35,7 @@ export default function GeneratePage() {
         setStatus('completed');
         setGeneratedContent(data.content);
         setPolling(false);
+        setCountdownStart(null);
       }
     });
 
@@ -48,12 +52,18 @@ export default function GeneratePage() {
           const response = await generateAPI.getStatus(jobId);
           if (response.success) {
             setStatus(response.data.status);
+            if (response.data.status === 'processing') {
+              // Reset countdown when status changes to processing
+              setCountdownStart(null);
+            }
             if (response.data.status === 'completed' && response.data.content) {
               setGeneratedContent(response.data.content);
               setPolling(false);
+              setCountdownStart(null);
               clearInterval(interval);
             } else if (response.data.status === 'failed') {
               setPolling(false);
+              setCountdownStart(null);
               clearInterval(interval);
             }
           }
@@ -84,6 +94,7 @@ export default function GeneratePage() {
       if (response.success) {
         setJobId(response.data.jobId);
         setStatus('queued');
+        setCountdownStart(Date.now()); // Start countdown timer
         setPrompt(''); // Clear form
       } else {
         setError(response.error || 'Failed to generate content');
@@ -204,7 +215,7 @@ export default function GeneratePage() {
               <div className="space-y-4">
                 {status === 'queued' && (
                   <div className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg border border-yellow-200">
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
                         <p className="text-sm font-medium text-yellow-900">
@@ -214,6 +225,17 @@ export default function GeneratePage() {
                       <p className="text-sm text-yellow-800">
                         Your content generation job has been queued. It will start processing in approximately 1 minute.
                       </p>
+                      {countdownStart && (
+                        <div className="pt-2">
+                          <CountdownTimer 
+                            initialSeconds={60}
+                            onComplete={() => {
+                              // Countdown finished, but job might still be queued
+                              setCountdownStart(null);
+                            }}
+                          />
+                        </div>
+                      )}
                       {polling && (
                         <div className="pt-2">
                           <TypingLoader className="text-yellow-700" />
@@ -256,10 +278,10 @@ export default function GeneratePage() {
                       <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                         {generatedContent.title}
                       </h3>
-                      <div className="p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 shadow-sm">
-                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-sm sm:text-base">
-                          {generatedContent.generatedText}
-                        </p>
+                      <div className="p-4 sm:p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+                        <div className="text-gray-700 leading-relaxed text-sm sm:text-base prose prose-sm max-w-none">
+                          {formatMarkdownText(generatedContent.generatedText)}
+                        </div>
                       </div>
                     </div>
 
@@ -275,6 +297,7 @@ export default function GeneratePage() {
                           setJobId(null);
                           setStatus(null);
                           setGeneratedContent(null);
+                          setCountdownStart(null);
                         }}
                         className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                       >

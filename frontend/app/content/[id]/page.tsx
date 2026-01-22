@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { contentAPI } from '@/lib/api';
+import { formatMarkdownText } from '@/utils/markdownFormatter';
 
 export default function ContentDetailPage() {
   const params = useParams();
@@ -148,10 +149,10 @@ export default function ContentDetailPage() {
               {content.status === 'completed' && content.generatedText && (
                 <div>
                   <h2 className="text-sm font-medium text-gray-500 mb-2">Generated Content</h2>
-                  <div className="p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 shadow-sm">
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed text-sm sm:text-base">
-                      {content.generatedText}
-                    </p>
+                  <div className="p-4 sm:p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+                    <div className="text-gray-700 leading-relaxed text-sm sm:text-base prose prose-sm max-w-none">
+                      {formatMarkdownText(content.generatedText)}
+                    </div>
                   </div>
                 </div>
               )}
